@@ -41,12 +41,9 @@ Save the contents of the above `curl` command to a file and view the file as a b
 
 Hint 1: adding `>filename` to the end of a shell command line causes the command's output to be stored in that file rather than displayed in the terminal window.
 
-Hint 2: Previewing file in a browser:
-  | Local computer | Codio |
-  |-----|------|
-  | If you are saving files on your own computer's hard drive, store the command output in a file with an extension .html and open the created file with your browser.   | When you create or save files they appear in a "file tree" down the left-hand side; you can open files in the editor by clicking or double-clicking on the file's name. To preview a file in a browser, right-click and select "Preview static" |
+Hint 2: Previewing file in a browser: If you are saving files on your own computer's hard drive, store the command output in a file with an extension .html and open the created file with your browser.
 
-<details><summary>  What are two main differences between the preview you see and what you saw in a "normal" Web browser? What explains these differences?  </summary>  <p><blockquote>  There is no picture and no visual styling of the page elements, because both the picture and the stylesheet (.css file) have to be loaded separately.  The HTTP request you made only loaded the main HTML file.  In a regular browser, the browser would automatically follow the links to download and display the image, and to download the stylesheet file and apply the styling information. </blockquote></p></details>
+<details><summary> What are two main differences between the preview you see and what you saw in a "normal" Web browser? What explains these differences? </summary><p><blockquote>  There is no picture and no visual styling of the page elements, because both the picture and the stylesheet (.css file) have to be loaded separately.  The HTTP request you made only loaded the main HTML file.  In a regular browser, the browser would automatically follow the links to download and display the image, and to download the stylesheet file and apply the styling information. </blockquote></p></details>
 
 Now let's see what the server thinks a request looks like.  To do this, in another Terminal tab or window, we will pretend to be a Web server listening on port 8081.
 
@@ -54,12 +51,12 @@ Tell Netcat to listen on port 8081: `nc -l 8081`
 
 (As with most Unix command-line programs, you can say `nc --help` to get a listing of other options, or `man nc` to view its detailed "manual page.")
 
-<details><summary> Assuming you're running `curl` from another shell (on the same Codio workspace, if applicable), what URL will you have to pass to `curl` to try to access your fake server, and why? </summary><p><blockquote><code>http://localhost:8081</code> is the URL.  Localhost always means "this same machine" and 8081 is the port number.  Without the port number, the default would be 80, which is the IANA default port for Web servers (or 443 for HTTPS-secured servers).  You could also use localhost's special IP address directly: <code>http://127.0.0.1:8081</code> would also work.  </blockquote></p></details>
+<details><summary> Assuming you're running `curl` from another shell, what URL will you have to pass to `curl` to try to access your fake server, and why? </summary><p><blockquote><code>http://localhost:8081</code> is the URL.  Localhost always means "this same machine" and 8081 is the port number.  Without the port number, the default would be 80, which is the IANA default port for Web servers (or 443 for HTTPS-secured servers).  You could also use localhost's special IP address directly: <code>http://127.0.0.1:8081</code> would also work.  </blockquote></p></details>
 
 Visit your "fake" server with `curl` and the correct URL.  Your "fake" server will receive the HTTP client request.
 
 
-<details><summary>The first line of the request identifies which URL the client wants to retrieve.  Why don't you see `http://localhost:8081` anywhere on that line?</summary><p><blockquote>The hostname part of the URL tells the browser (or other client) which protocol to use (HTTP) and which server and port to contact (port 8081 on localhost). Once the server is contacted, the client just needs to tell it the remainder of the URL (the path portion) that it wants to retrieve.  </blockquote></p></details>
+<details><summary> The first line of the request identifies which URL the client wants to retrieve.  Why don't you see `http://localhost:8081` anywhere on that line?</summary><p><blockquote>The hostname part of the URL tells the browser (or other client) which protocol to use (HTTP) and which server and port to contact (port 8081 on localhost). Once the server is contacted, the client just needs to tell it the remainder of the URL (the path portion) that it wants to retrieve.  </blockquote></p></details>
 
 Make a note of which headers you see: this is how a real Web server perceives a connection from `curl`.
 
@@ -71,11 +68,11 @@ Now that you've seen what an HTTP request looks like from the server's point of 
 
 ## Learning goal: understand what happens when an HTTP request fails.
 
-<details><summary>What would the server response code be if you tried to fetch a nonexistent URL on the random word generator site?  Try it using the procedure above.</summary><p><blockquote> The HTTP status code is 404.  The words "Not found" after the status  code are there for human readability; only the 3-digit status code is officially required.</blockquote></p></details>
+<details><summary> What would the server response code be if you tried to fetch a nonexistent URL on the random word generator site?  Try it using the procedure above.</summary><p><blockquote> The HTTP status code is 404.  The words "Not found" after the status  code are there for human readability; only the 3-digit status code is officially required.</blockquote></p></details>
 
 What other HTTP error codes exist?  Use Wikipedia or another resource to learn the meanings of some of the most common:  200, 301, 302, 400, 404, 500.  Note that these are "families" of statuses: all 2xx statuses mean "it worked", all 3xx are "redirect", and so on.
 
-<details><summary>Both 4xx and 5xx headers indicate error conditions.  What is the main difference between 4xx and 5xx?</summary><p><blockquote>4xx errors are the server actually responding "Sorry, no dice."  5xx errors occur when something went so severely sideways--for example, the app server crashed, or the SaaS app running on the server raised an unhandled exception--that the HTTP server layer, which just handles traffic to and from the app, had to take over and say "Sorry, the app is too hosed to even tell you that it's hosed." </blockquote></p></details>
+<details><summary> Both 4xx and 5xx headers indicate error conditions.  What is the main difference between 4xx and 5xx?</summary><p><blockquote>4xx errors are the server actually responding "Sorry, no dice."  5xx errors occur when something went so severely sideways--for example, the app server crashed, or the SaaS app running on the server raised an unhandled exception--that the HTTP server layer, which just handles traffic to and from the app, had to take over and say "Sorry, the app is too hosed to even tell you that it's hosed." </blockquote></p></details>
 
 ## Learning goal: understand concept of request body
 
