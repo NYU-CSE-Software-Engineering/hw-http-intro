@@ -18,7 +18,7 @@ You will need to know how to open a _terminal_ or _shell_ window in your computi
 
 In the beginning was the command line, and that's where we'll be for this intro to HTTP.  We will use two command-line tools. [cURL](https://en.wikipedia.org/wiki/CURL) (pronounced "curl") to act as a SaaS client, and [netcat](https://en.wikipedia.org/wiki/Netcat) (pronounced "netcat") to act as a SaaS server.
 
-We will also be working with two real web sites: a
+We will also be working with two real websites: a
 [random-word generator](https://github.com/depasqua/esaas-) that will also be featured in a future assignment, and
 a simple [cookie demo site](https://github.com/depasqua/esaas-simple-cookie-demo)
 written just for this assignment and deployed on Heroku.
@@ -28,20 +28,15 @@ to get a "user's view" of what's on the front page.
 
 ## Learning goal: understand basic parts of an HTTP request and response
 
-The most basic use of `curl` is to issue an HTTP GET or POST to a
-site, so try `curl 'https://esaas-randomword-27a759b6224d.herokuapp.com/'` and verify that what
-you see printed could plausibly correspond to the page content you
-viewed in your browser previously.  (The single quotes are not
-technically necessary in this case, but you should get used to using
-them with `curl`, because URIs will often have special characters in
-them, such as `?` or `#`, that would be interpreted in special ways by
-the Unix shell if they're not protected by single quotes.)
+The most basic use of `curl` is to issue an HTTP GET or POST to a site, so try `curl 'http://esaas-randomword-27a759b6224d.herokuapp.com/'` and verify that what
+you see printed could plausibly correspond to the page content you viewed in your browser previously. (The single quotes are not
+technically necessary in this case, but you should get used to using them with `curl`, because URIs will often have special characters in them, such as `?` or `#`, that would be interpreted in special ways by the Unix shell if they're not protected by single quotes.)
 
 Save the contents of the above `curl` command to a file and view the file as a browser would render it.
 
-Hint 1: adding `>filename` to the end of a shell command line causes the command's output to be stored in that file rather than displayed in the terminal window.
+Hint 1: Adding `>filename` to the end of a shell command line causes the command's output to be stored in that file rather than displayed in the terminal window.
 
-Hint 2: Previewing file in a browser: If you are saving files on your own computer's hard drive, store the command output in a file with an extension .html and open the created file with your browser.
+Hint 2: Previewing a file in a browser: If you are saving files on your own computer's hard drive, store the command output in a file with an extension .html and open the created file with your browser.
 
 <details><summary> What are two main differences between the preview you see and what you saw in a "normal" Web browser? What explains these differences? </summary><p><blockquote>  There is no picture and no visual styling of the page elements, because both the picture and the stylesheet (.css file) have to be loaded separately.  The HTTP request you made only loaded the main HTML file.  In a regular browser, the browser would automatically follow the links to download and display the image, and to download the stylesheet file and apply the styling information. </blockquote></p></details>
 
@@ -51,7 +46,7 @@ Tell Netcat to listen on port 8081: `nc -l 8081`
 
 (As with most Unix command-line programs, you can say `nc --help` to get a listing of other options, or `man nc` to view its detailed "manual page.")
 
-<details><summary> Assuming you're running `curl` from another shell, what URL will you have to pass to `curl` to try to access your fake server, and why? </summary><p><blockquote><code>http://localhost:8081</code> is the URL.  Localhost always means "this same machine" and 8081 is the port number.  Without the port number, the default would be 80, which is the IANA default port for Web servers (or 443 for HTTPS-secured servers).  You could also use localhost's special IP address directly: <code>http://127.0.0.1:8081</code> would also work.  </blockquote></p></details>
+<details><summary> Assuming you're running `curl` from another shell, what URL will you have to pass to `curl` to try to access your fake server, and why? </summary><p><blockquote><code>http://localhost:8081</code> is the URL.  Localhost always means "this same machine", and 8081 is the port number.  Without the port number, the default would be 80, which is the IANA default port for Web servers (or 443 for HTTPS-secured servers).  You could also use localhost's special IP address directly: <code>http://127.0.0.1:8081</code> would also work.  </blockquote></p></details>
 
 Visit your "fake" server with `curl` and the correct URL.  Your "fake" server will receive the HTTP client request.
 
@@ -60,7 +55,7 @@ Visit your "fake" server with `curl` and the correct URL.  Your "fake" server wi
 
 Make a note of which headers you see: this is how a real Web server perceives a connection from `curl`.
 
-Now that you've seen what an HTTP request looks like from the server's point of view, let's see what the response looks like from the client's point of view.  In particular, `curl` just prints out the content sent back from the server, but we'd like to see the server headers.  Try `curl --help` to see the help and verify that the command line `curl -i 'http://esaas-randomword-27a759b6224d.saasbook.info'` will display BOTH  the server's response headers AND then the response body.
+Now that you've seen what an HTTP request looks like from the server's point of view, let's see what the response looks like from the client's point of view.  In particular, `curl` just prints out the content sent back from the server, but we'd like to see the server headers.  Try `curl --help` to see the help and verify that the command line `curl -i 'http://esaas-randomword-27a759b6224d.herokuapp.com'` will display BOTH  the server's response headers AND then the response body.
 
 <details><summary> Based on the server headers, what is the server's HTTP response code giving the status of the client's request, and what version of the HTTP protocol did the server use to respond to the client?</summary><p><blockquote>The first line tells us that HTTP 1.1 was used, and that the request succeeded with code 200.</blockquote></p></details>
 
@@ -74,9 +69,9 @@ What other HTTP error codes exist?  Use Wikipedia or another resource to learn t
 
 <details><summary> Both 4xx and 5xx headers indicate error conditions.  What is the main difference between 4xx and 5xx?</summary><p><blockquote>4xx errors are the server actually responding "Sorry, no dice."  5xx errors occur when something went so severely sideways--for example, the app server crashed, or the SaaS app running on the server raised an unhandled exception--that the HTTP server layer, which just handles traffic to and from the app, had to take over and say "Sorry, the app is too hosed to even tell you that it's hosed." </blockquote></p></details>
 
-## Learning goal: understand concept of request body
+## Learning goal: understand the concept of request body
 
-Next we will create a simple HTML form that you can post from your browser and intercept it with Netcat as above, so you can see what a form posting looks like to a Web server.  This is relevant because in your own SaaS apps you will have to work with submitted form data; while most frameworks like Sinatra and Rails do a nice job for you of parsing and pre-digesting such form data in order to make it conveniently available to your app, it is worth understanding what that data normally looks like before such processing.
+Next, we will create a simple HTML form that you can post from your browser and intercept it with Netcat as above, so you can see what a form posting looks like to a Web server.  This is relevant because in your own SaaS apps, you will have to work with submitted form data; while most frameworks like Sinatra and Rails do a nice job for you of parsing and pre-digesting such form data in order to make it conveniently available to your app, it is worth understanding what that data normally looks like before such processing.
 
 Once again, start `nc -l 8081` to listen on port 8081.
 
@@ -100,7 +95,7 @@ Create and save (ideally with extension `.html`) the following minimal file:
 </html>
 ```
 
-<!-- <details><summary>An HTML form when submitted generates an HTTP `POST` request from the browser.  In order to reach your fake server, with what URL should you replace FAKE-SERVER-URL-HERE in the above file?</summary> <p><blockquote> **Local computer:** `http://localhost:8081` <br> **Codio:** `https://box-name-8081.codio.io/` where box-name is the two-word phrase you see in your terminal prompt. Example `codio@emerald-tripod:~/workspace$` would be `https://emerald-tripod-8081.codio.io/`</blockquote></p></details> -->
+<!-- <details><summary>An HTML form, when submitted, generates an HTTP `POST` request from the browser.  In order to reach your fake server, with what URL should you replace FAKE-SERVER-URL-HERE in the above file?</summary> <p><blockquote> **Local computer:** `http://localhost:8081` <br> **Codio:** `https://box-name-8081.codio.io/` where box-name is the two-word phrase you see in your terminal prompt. Example `codio@emerald-tripod:~/workspace$` would be `https://emerald-tripod-8081.codio.io/`</blockquote></p></details> -->
 
 Modify the file, open it in your computer's Web browser, fill in some values in the form, and submit it.  Now go to your terminal and look at the window where `nc` is listening.
 
@@ -112,7 +107,7 @@ Repeat the experiment various times to answer the following questions by observi
 
 * What is the effect of changing the `name` properties of the form fields?
 
-* Can you have more than one Submit button?  If you do, how does the server tell which one was clicked?  (Hint: experiment with the attribtues of the `<submit>` tag.)
+* Can you have more than one Submit button?  If you do, how does the server tell which one was clicked?  (Hint: experiment with the attributes of the `<submit>` tag.)
 
 * Can the form be submitted using `GET` instead of `POST`?  If yes, what is the difference in how the server sees those requests?
 
@@ -120,7 +115,7 @@ Repeat the experiment various times to answer the following questions by observi
 
 ## Learning goal: understand the effect of HTTP being stateless, and the role of cookies
 
-In this section we will use a simple app developed for this course to help you experiment with cookies. The curious can see the [app's source code](https://github.com/depasqua/esaas-simple-cookie-demo) (it uses the simple Sinatra framework).
+In this section, we will use a simple app developed for this course to help you experiment with cookies. The curious can see the [app's source code](https://github.com/depasqua/esaas-simple-cookie-demo) (it uses the simple Sinatra framework).
 
 This app only supports two routes:
 
@@ -130,14 +125,14 @@ This app only supports two routes:
 
 This app lives at [http://esaas-simple-cookie-demo-b12c5173f72e.herokuapp.com](http://esaas-simple-cookie-demo-b12c5173f72e.herokuapp.com/) but it only serves up text strings, not HTML pages.  Boring, but great for use with `curl`.
 
-<details><summary>Try the first two <code>GET</code> operations above.  The body of the response for the first one should be "Logged in: false", and for the second one "Login cookie set."  What are the differences in the response <i>headers</i> that indicate the second operation is setting a cookie? (Hint: use <code>curl -v</code>, which will display both the request headers and the response headers and body, along with other debugging information.  <code>curl --help</code> will print voluminous help for using cURL, and <code>man curl</code> will show the Unix "manual page" for cURL on most systems.)  </summary><p><blockquote> The second operation should include in the headers <code>Set-Cookie:</code> followed by a string that is the value of the cookie to be set.  A browser would automatically grab this value and store it as one of the cookies to be sent whenever this site is re-revisisted.  (But heads up/spoiler alert: we're not using  a browser but just a simple command-line utility that issues independent HTTP requests...) </blockquote></p></details>
+<details><summary>Try the first two <code>GET</code> operations above.  The body of the response for the first one should be "Logged in: false", and for the second one "Login cookie set."  What are the differences in the response <i>headers</i> that indicate the second operation is setting a cookie? (Hint: use <code>curl -v</code>, which will display both the request headers and the response headers and body, along with other debugging information.  <code>curl --help</code> will print voluminous help for using cURL, and <code>man curl</code> will show the Unix "manual page" for cURL on most systems.)  </summary><p><blockquote> The second operation should include in the headers <code>Set-Cookie:</code> followed by a string that is the value of the cookie to be set.  A browser would automatically grab this value and store it as one of the cookies to be sent whenever this site is revisited.  (But heads up/spoiler alert: we're not using  a browser but just a simple command-line utility that issues independent HTTP requests...) </blockquote></p></details>
 
 <details> <summary>OK, so now you are supposedly "logged in" because the server set a cookie indicating this.  Yet if you now try <code>GET /</code> again, it will still say "Logged in: false".  What's going on?  (Hint: use <code>curl -v</code>
-and look at the client request headers.) </summary><p><blockquote> The server tried to set a cookie, but it's the client's job to remember the cookie and pass it back to the server as part of the headers whenever that same site is visited.   Browsers do this automaticaly (unless you have disabled cookies in the preferences), but <code>curl</code> won't do this   without explicit instructions.  The server isn't seeing the cookie as part of subsequent requests, so it can't identify you.  </blockquote></p></details>
+and look at the client request headers.) </summary><p><blockquote> The server tried to set a cookie, but it's the client's job to remember the cookie and pass it back to the server as part of the headers whenever that same site is visited.   Browsers do this automatically (unless you have disabled cookies in the preferences), but <code>curl</code> won't do this   without explicit instructions.  The server isn't seeing the cookie as part of subsequent requests, so it can't identify you.  </blockquote></p></details>
 
 To fix this, we have to tell `curl` to store any relevant cookies the server sends, so it knows to include them with future requests to that server.
 
-Try `curl -i --cookie-jar cookies.txt https://esaas-simple-cookie-demo-b12c5173f72e.herokuapp.com/login` and verify that the newly created file `cookies.txt` contains information about the cookie that matches the `Set-Cookie` header from the server.  This file is how `curl` stores cookie information; browsers may do it differently.
+Try `curl -i --cookie-jar cookies.txt http://esaas-simple-cookie-demo-b12c5173f72e.herokuapp.com/login` and verify that the newly created file `cookies.txt` contains information about the cookie that matches the `Set-Cookie` header from the server.  This file is how `curl` stores cookie information; browsers may do it differently.
 
 Now we must tell `curl` to include any appropriate cookies from this file when visiting the site, which we do with the `-b` option:
 
@@ -147,9 +142,9 @@ Verify that the cookie is now transmitted (hint: look at the client request head
 
 <details><summary>Looking at the <code>Set-Cookie</code> header or the contents of the <code>cookies.txt</code> file, it seems like you could have easily created this cookie and just forced the server to believe you are logged in.  In practice, how do servers avoid this insecurity?</summary><p><blockquote>In practice cookies are usually both encrypted (so the user cannot read the cookie contents, as you could here) and tamper-evident (part of the cookie is a substring that acts as a "fingerprint" for the rest of the string, so that even if you try to modify the cookie contents, you'd have to know how to also modify the fingerprint, similar to the "CVV code" used by credit cards).  The keys required for both operations are known only to the server.</blockquote></p></details>
 
-To summarize: the only way the server can "keep track" of the same client is by setting a cookie when the client first visits, relying on the client to include that cookie in the headers on subsequent visits, and if the server modifies the cookie during the session (by including additional <code>Set-Cookie</code> headers), relying on the client to remember those changes as well.  In this way, even though HTTP itself is stateless (every request independent of every other), the app can internally maintain the notion of "session state" for each client, using the cookie as a "handle" to name that state internally. (In practice, most SaaS apps use the cookie to hold on to a lookup key that maps the cookie value to a larger and more complex data structure stored at the server.)
+To summarize: the only way the server can "keep track" of the same client is by setting a cookie when the client first visits, relying on the client to include that cookie in the headers on subsequent visits, and if the server modifies the cookie during the session (by including additional <code>Set-Cookie</code> headers), relying on the client to remember those changes as well.  In this way, even though HTTP itself is stateless (every request is independent of every other), the app can internally maintain the notion of "session state" for each client, using the cookie as a "handle" to name that state internally. (In practice, most SaaS apps use the cookie to hold on to a lookup key that maps the cookie value to a larger and more complex data structure stored at the server.)
 
 Disabling cookies in the client thwarts all of these behaviors, which is why most sites that require login (which is a stateful concept: you're logged in, or you're not), or which step you through a sequence of pages to do an operation (another stateful concept: which page of the flow are you currently on?  Which page should be shown next?) don't work properly if cookies are disabled in the browser.
 
 ## Finally...
-As a follow up exercise (and part of this CHIP, don't forget to complete the quiz in Gradescope. You can find it linked in the Brightspace assignment page for this CHIP.
+As a follow-up exercise (and part of this CHIP, don't forget to complete the quiz in Gradescope. You can find it linked in the Brightspace assignment page for this CHIP.
