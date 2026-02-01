@@ -19,10 +19,9 @@ You will need to know how to open a _terminal_ or _shell_ window in your computi
 In the beginning was the command line, and that's where we'll be for this intro to HTTP.  We will use two command-line tools. [cURL](https://en.wikipedia.org/wiki/CURL) (pronounced "curl") to act as a SaaS client, and [netcat](https://en.wikipedia.org/wiki/Netcat) (pronounced "netcat") to act as a SaaS server.
 
 We will also be working with two real web sites: a
-[random-word generator](http://randomword.saasbook.info) that will also be featured in a future assignment, and
-a simple [cookie demo site](https://github.com/saasbook/simple-cookie-demo)
+[random-word generator](https://github.com/depasqua/esaas-) that will also be featured in a future assignment, and
+a simple [cookie demo site](https://github.com/depasqua/esaas-simple-cookie-demo)
 written just for this assignment and deployed on Heroku.
-
 
 Start by visiting the random word generator in your favorite browser
 to get a "user's view" of what's on the front page.
@@ -30,7 +29,7 @@ to get a "user's view" of what's on the front page.
 ## Learning goal: understand basic parts of an HTTP request and response
 
 The most basic use of `curl` is to issue an HTTP GET or POST to a
-site, so try `curl 'http://randomword.saasbook.info'` and verify that what
+site, so try `curl 'https://esaas-randomword-27a759b6224d.herokuapp.com/'` and verify that what
 you see printed could plausibly correspond to the page content you
 viewed in your browser previously.  (The single quotes are not
 technically necessary in this case, but you should get used to using
@@ -64,33 +63,19 @@ Visit your "fake" server with `curl` and the correct URL.  Your "fake" server wi
 
 Make a note of which headers you see: this is how a real Web server perceives a connection from `curl`.
 
-Now that you've seen what an HTTP request looks like from the server's point of view, let's see what the response looks like from the client's point of view.  In particular, `curl` just prints out the content sent back from the server, but we'd like to see the server headers.  Try `curl --help` to see the help and verify that the command line `curl -i 'http://randomword.saasbook.info'` will display BOTH  the server's response headers AND then the response body.
+Now that you've seen what an HTTP request looks like from the server's point of view, let's see what the response looks like from the client's point of view.  In particular, `curl` just prints out the content sent back from the server, but we'd like to see the server headers.  Try `curl --help` to see the help and verify that the command line `curl -i 'http://esaas-randomword-27a759b6224d.saasbook.info'` will display BOTH  the server's response headers AND then the response body.
 
 <details><summary> Based on the server headers, what is the server's HTTP response code giving the status of the client's request, and what version of the HTTP protocol did the server use to respond to the client?</summary><p><blockquote>The first line tells us that HTTP 1.1 was used, and that the request succeeded with code 200.</blockquote></p></details>
 
-
 <details><summary> Any given Web request might return an HTML page, an image, or a number of other types of entities.  Is there anything in the headers that you think tells the client how to interpret the result? </summary><p><blockquote>The <code>Content-Type</code> header in this case tells the client that the content returned is an HTML page.</blockquote></p></details>
-
-
 
 ## Learning goal: understand what happens when an HTTP request fails.
 
-<details><summary>What would the server response code be if you tried
-to fetch a nonexistent URL on the random word generator site?  Try it
-using the procedure above.</summary><p><blockquote> The HTTP status
-code is 404.  The words "Not found" after the status  code are there
-for human readability; only the 3-digit status code is officially
-required. </blockquote></p></details>
+<details><summary>What would the server response code be if you tried to fetch a nonexistent URL on the random word generator site?  Try it using the procedure above.</summary><p><blockquote> The HTTP status code is 404.  The words "Not found" after the status  code are there for human readability; only the 3-digit status code is officially required.</blockquote></p></details>
 
-What other HTTP error codes exist?  Use Wikipedia or another resource
-to learn the meanings of some of the most common:  200, 301, 302, 400,
-404, 500.  Note that these are "families" of statuses: all 2xx
-statuses mean "it worked", all 3xx are "redirect", and so on.
-
+What other HTTP error codes exist?  Use Wikipedia or another resource to learn the meanings of some of the most common:  200, 301, 302, 400, 404, 500.  Note that these are "families" of statuses: all 2xx statuses mean "it worked", all 3xx are "redirect", and so on.
 
 <details><summary>Both 4xx and 5xx headers indicate error conditions.  What is the main difference between 4xx and 5xx?</summary><p><blockquote>4xx errors are the server actually responding "Sorry, no dice."  5xx errors occur when something went so severely sideways--for example, the app server crashed, or the SaaS app running on the server raised an unhandled exception--that the HTTP server layer, which just handles traffic to and from the app, had to take over and say "Sorry, the app is too hosed to even tell you that it's hosed." </blockquote></p></details>
-
-
 
 ## Learning goal: understand concept of request body
 
@@ -118,12 +103,11 @@ Create and save (ideally with extension `.html`) the following minimal file:
 </html>
 ```
 
-<details><summary>An HTML form when submitted generates an HTTP `POST` request from the browser.  In order to reach your fake server, with what URL should you replace FAKE-SERVER-URL-HERE in the above file?</summary> <p><blockquote> **Local computer:** `http://localhost:8081` <br> **Codio:** `https://box-name-8081.codio.io/` where box-name is the two-word phrase you see in your terminal prompt. Example `codio@emerald-tripod:~/workspace$` would be `https://emerald-tripod-8081.codio.io/`</blockquote></p></details>
+<!-- <details><summary>An HTML form when submitted generates an HTTP `POST` request from the browser.  In order to reach your fake server, with what URL should you replace FAKE-SERVER-URL-HERE in the above file?</summary> <p><blockquote> **Local computer:** `http://localhost:8081` <br> **Codio:** `https://box-name-8081.codio.io/` where box-name is the two-word phrase you see in your terminal prompt. Example `codio@emerald-tripod:~/workspace$` would be `https://emerald-tripod-8081.codio.io/`</blockquote></p></details> -->
 
 Modify the file, open it in your computer's Web browser, fill in some values in the form, and submit it.  Now go to your terminal and look at the window where `nc` is listening.
 
-
-<details><summary>How is the information you entered into the form presented to the server?  What tasks would a SaaS framework like Sinatra or Rails need to do to present this information in a convenient format to a SaaS app written in, say, Ruby? </summary><p><blockquote>The form contents are presented as a long string of the form  `key1=value1&key2=value2&...keyN=valueN` where each key is the name of a form field and the values are [URL-escaped](https://en.wikipedia.org/wiki/Percent-encoding).  The server framework must pick apart the keys and values, un-escape the  values, and present the collection in some nice way, like a hash. </blockquote></p></details>
+<details><summary>How is the information you entered into the form presented to the server?  What tasks would a SaaS framework like Sinatra or Rails need to do to present this information in a convenient format to a SaaS app written in, say, Ruby? </summary><p><blockquote>The form contents are presented as a long string of the form  `key1=value1&key2=value2&...keyN=valueN` where each key is the name of a form field and the values are [URL-escaped](https://en.wikipedia.org/wiki/Percent-encoding). The server framework must pick apart the keys and values, un-escape the values, and present the collection in some nice way, like a hash. </blockquote></p></details>
 
 Repeat the experiment various times to answer the following questions by observing the differences in the output printed by `nc`:
 
@@ -139,7 +123,7 @@ Repeat the experiment various times to answer the following questions by observi
 
 ## Learning goal: understand the effect of HTTP being stateless, and the role of cookies
 
-In this section we will use a simple app developed for this course to help you experiment with cookies.  The curious can see the [app's source code](https://github.com/saasbook/simple-cookie-demo)(it uses the simple Sinatra framework).
+In this section we will use a simple app developed for this course to help you experiment with cookies. The curious can see the [app's source code](https://github.com/depasqua/esaas-simple-cookie-demo) (it uses the simple Sinatra framework).
 
 This app only supports two routes:
 
@@ -147,22 +131,20 @@ This app only supports two routes:
 
 * `GET /login` returns a response that instructs the browser to set a cookie.  The cookie contents are set by the app to  indicate the user has logged in.  (In a real app, the server would run some code that verifies a username/password pair or similar.)
 
-This app lives at `http://esaas-cookie-demo.herokuapp.com` but it only serves up text strings, not HTML pages.  Boring, but great for use with `curl`.
-
+This app lives at [http://esaas-simple-cookie-demo-b12c5173f72e.herokuapp.com](http://esaas-simple-cookie-demo-b12c5173f72e.herokuapp.com/) but it only serves up text strings, not HTML pages.  Boring, but great for use with `curl`.
 
 <details><summary>Try the first two <code>GET</code> operations above.  The body of the response for the first one should be "Logged in: false", and for the second one "Login cookie set."  What are the differences in the response <i>headers</i> that indicate the second operation is setting a cookie? (Hint: use <code>curl -v</code>, which will display both the request headers and the response headers and body, along with other debugging information.  <code>curl --help</code> will print voluminous help for using cURL, and <code>man curl</code> will show the Unix "manual page" for cURL on most systems.)  </summary><p><blockquote> The second operation should include in the headers <code>Set-Cookie:</code> followed by a string that is the value of the cookie to be set.  A browser would automatically grab this value and store it as one of the cookies to be sent whenever this site is re-revisisted.  (But heads up/spoiler alert: we're not using  a browser but just a simple command-line utility that issues independent HTTP requests...) </blockquote></p></details>
 
 <details> <summary>OK, so now you are supposedly "logged in" because the server set a cookie indicating this.  Yet if you now try <code>GET /</code> again, it will still say "Logged in: false".  What's going on?  (Hint: use <code>curl -v</code>
 and look at the client request headers.) </summary><p><blockquote> The server tried to set a cookie, but it's the client's job to remember the cookie and pass it back to the server as part of the headers whenever that same site is visited.   Browsers do this automaticaly (unless you have disabled cookies in the preferences), but <code>curl</code> won't do this   without explicit instructions.  The server isn't seeing the cookie as part of subsequent requests, so it can't identify you.  </blockquote></p></details>
 
-
 To fix this, we have to tell `curl` to store any relevant cookies the server sends, so it knows to include them with future requests to that server.
 
-Try `curl -i --cookie-jar cookies.txt http://esaas-cookie-demo.herokuapp.com/login` and verify that the newly created file `cookies.txt` contains information about the cookie that matches the `Set-Cookie` header from the server.  This file is how `curl` stores cookie information; browsers may do it differently.
+Try `curl -i --cookie-jar cookies.txt https://esaas-simple-cookie-demo-b12c5173f72e.herokuapp.com/login` and verify that the newly created file `cookies.txt` contains information about the cookie that matches the `Set-Cookie` header from the server.  This file is how `curl` stores cookie information; browsers may do it differently.
 
 Now we must tell `curl` to include any appropriate cookies from this file when visiting the site, which we do with the `-b` option:
 
-`curl -v -b cookies.txt http://esaas-cookie-demo.herokuapp.com/`
+`curl -v -b cookies.txt http://esaas-simple-cookie-demo-b12c5173f72e.herokuapp.com/`
 
 Verify that the cookie is now transmitted (hint: look at the client request headers) and the server now thinks you are logged in.
 
