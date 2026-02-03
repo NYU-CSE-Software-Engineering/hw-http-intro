@@ -19,7 +19,7 @@ You will need to know how to open a _terminal_ or _shell_ window in your computi
 In the beginning was the command line, and that's where we'll be for this intro to HTTP.  We will use two command-line tools. [cURL](https://en.wikipedia.org/wiki/CURL) (pronounced "curl") to act as a SaaS client, and [netcat](https://en.wikipedia.org/wiki/Netcat) (pronounced "netcat") to act as a SaaS server.
 
 We will also be working with two real websites: a
-[random-word generator](https://github.com/depasqua/esaas-) that will also be featured in a future assignment, and
+[random-word generator](https://github.com/depasqua/esaas-randomword) that will also be featured in a future assignment, and
 a simple [cookie demo site](https://github.com/depasqua/esaas-simple-cookie-demo)
 written just for this assignment and deployed on Heroku.
 
