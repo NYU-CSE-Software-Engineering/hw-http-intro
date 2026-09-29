@@ -20,7 +20,7 @@ In the beginning, there was the command line, and that's where we'll be for this
 
 We will also be working with two real websites: a
 [random-word generator](https://github.com/NYU-CSE-Software-Engineering/esaas-randomword) that will also be featured in a future assignment, and
-a simple [cookie demo site](https://github.com/depasqua/esaas-simple-cookie-demo)
+a simple [cookie demo site](https://github.com/NYU-CSE-Software-Engineering/esaas-simple-cookie-demo)
 written just for this assignment and deployed on Heroku.
 
 Start by visiting the random word generator in your favorite browser
@@ -115,7 +115,7 @@ Repeat the experiment various times to answer the following questions by observi
 
 ## Learning goal: understand the effect of HTTP being stateless, and the role of cookies
 
-In this section, we will use a simple app developed for this course to help you experiment with cookies. The curious can see the [app's source code](https://github.com/depasqua/esaas-simple-cookie-demo) (it uses the simple Sinatra framework).
+In this section, we will use a simple app developed for this course to help you experiment with cookies. The curious can see the [app's source code](https://github.com/NYU-CSE-Software-Engineering/esaas-simple-cookie-demo) (it uses the simple Sinatra framework).
 
 This app only supports two routes:
 
